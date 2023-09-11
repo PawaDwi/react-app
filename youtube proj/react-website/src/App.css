@@ -1,8 +1,7 @@
 
 *{
-padding: 10;
+padding: 0;
 margin: 0;
-
 }
 
 .AddData{
@@ -12,8 +11,6 @@ margin: 0;
   text-align: center;
   background-color: rgb(129, 212, 142);
   height: 100vh;
-
- 
 }
 
 .addButon{

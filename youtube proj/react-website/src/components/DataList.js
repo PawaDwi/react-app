@@ -1,33 +1,38 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Search from "./Search";
+import AddData from "./AddData";
 
 const DataListing = () => {
   const apiUrl = "http://localhost:9000/getAll";
+  const [name, setname] = useState("");
+  const [updatedeemplist, setupdateemplist] = useState([]);
+  const [salary, setsalary] = useState("");
   const [data, setdata] = useState([]);
   const [isAscending, setIsAscending] = useState(true);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(apiUrl);
-        const data = response.data;
-        setdata(data);
-      } catch (error) {
-        console.log(error);
-      }
+  async function fetchData() {
+    try {
+      const response = await axios.get(apiUrl);
+      const alldata = response.data;
+      setdata(alldata);
+      setupdateemplist(alldata);
+    } catch (error) {
+      console.log(error);
     }
-  
+  }
+  useEffect(() => {
     fetchData();
   }, []);
+
   const updateSearchData = (filteredData) => {
     setdata(filteredData);
   };
 
   const handleSort = (property) => {
-
     console.log(`Sorting by property: ${property}, Ascending: ${isAscending}`);
-    const sortedData = [...data].sort((a, b) => {
+
+    const sortedData = data.sort((a, b) => {
       const valueA = a[property];
       const valueB = b[property];
 
@@ -55,37 +60,43 @@ const DataListing = () => {
   const handleDelete = async (id) => {
     try {
       await axios.post(`http://localhost:9000/${id}`);
-      // After successful delete, fetch the updated data
       fetchingData();
     } catch (error) {
       console.log(error);
     }
   };
 
+  console.log(data);
   return (
     <div className="data">
+      <AddData
+        name={name}
+        salary={salary}
+        setname={setname}
+        setsalary={setsalary}
+        getdata={fetchData}
+      />
+      <Search data={updatedeemplist} updateSearchData={updateSearchData} />
 
-        <Search data={data} updateSearchData={updateSearchData} />
-    
-        <div className="itemdata">
-
+      <div className="itemdata">
         <button onClick={() => handleSort("ReminderMsg")}>
-        {isAscending ? "Sort A-Z" : "Sort Z-A"}
-         </button>
-        </div>
-     <div className="datalist">
-    <h2>Data List</h2>
-      <ul>
-        {data.map((values) => (
-          <li key={values.id}>
-            <div className="deletebutton">
-            {values.ReminderMsg} - {values.ReminderAt}
-            <button onClick={() => handleDelete(values.id)}>Delete</button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+          {isAscending ? "Sort A-Z" : "Sort Z-A"}
+        </button>
+      </div>
+
+      <div className="datalist">
+        <h2>Data List</h2>
+        <ul>
+          {data.map((values) => (
+            <li key={values.id}>
+              <div className="deletebutton">
+                {values.ReminderMsg} - {values.ReminderAt}
+                <button onClick={() => handleDelete(values.id)}>Delete</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
-const AddData = () => {
-  const [ReminderMsg, setname] = useState("");
-  const [ReminderAt, setsalary] = useState("");
+const AddData = (props) => {
+  const { name, salary, setname, setsalary, getdata } = props; // const [name, setname] = useState("");
   const apiUrl = "http://localhost:9000/addReminder";
 
   const handleAddData = () => {
     const newEmployee = {
-      ReminderMsg,
-      ReminderAt,
+      ReminderMsg: name,
+      ReminderAt: salary,
     };
-
     axios
       .post(apiUrl, newEmployee, {
         headers: {
@@ -19,9 +17,10 @@ const AddData = () => {
       })
       .then((response) => {
         console.log("Employee added:", response.data);
-        // Clear input fields after successful addition
+        // To Clear input fields 
         setname("");
         setsalary("");
+        getdata();
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -33,7 +32,7 @@ const AddData = () => {
         Name:
         <input
           type="text"
-          value={ReminderMsg}
+          value={name}
           onChange={(e) => setname(e.target.value)}
         />
       </label>
@@ -42,13 +41,13 @@ const AddData = () => {
         salary:
         <input
           type="text"
-          value={ReminderAt}
+          value={salary}
           onChange={(e) => setsalary(e.target.value)}
         />
       </label>
       <br />
       <div className="addButon">
-      <button onClick={handleAddData}>Add Data</button>
+        <button onClick={handleAddData}>Add Data</button>
       </div>
     </div>
   );

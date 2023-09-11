@@ -4,6 +4,7 @@ const Search = ({ data, updateSearchData }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
+   
     const filteredData = data.filter((item) =>
       item?.ReminderMsg?.toLowerCase().includes(searchQuery)
     );
